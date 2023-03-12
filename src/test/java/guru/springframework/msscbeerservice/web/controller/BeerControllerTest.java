@@ -15,11 +15,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @WebMvcTest(BeerController.class)
 class BeerControllerTest {
@@ -68,6 +68,15 @@ class BeerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(beerDtoJson))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void testGetBeerByUpc() throws Exception {
+
+        given(beerService.getByUpc(anyString())).willReturn(getValidBeerDto());
+
+        mockMvc.perform(get("/api/v1/beerUpc/" + "test").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     BeerDto getValidBeerDto(){
